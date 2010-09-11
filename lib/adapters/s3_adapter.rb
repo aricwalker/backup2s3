@@ -1,5 +1,6 @@
 require 'aws/s3'
 
+
 class Adapters::S3Adapter
   include System
 
@@ -10,7 +11,11 @@ class Adapters::S3Adapter
 
   def ensure_connected
     return if @connected    
-    AWS::S3::Base.establish_connection!(@config)
+    AWS::S3::Base.establish_connection!(
+      :access_key_id     => @config[:access_key_id],
+      :secret_access_key => @config[:secret_access_key],      
+      :use_ssl           => @config[:use_ssl]      
+    )
     AWS::S3::Bucket.create(bucket)
     @connected = true
   end
@@ -63,3 +68,5 @@ class Adapters::S3Adapter
   end
   
 end
+
+

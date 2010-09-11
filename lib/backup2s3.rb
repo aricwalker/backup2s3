@@ -122,8 +122,13 @@ class Backup2s3
   end
 
   # Creates instance of class used to interface with S3
-  def load_adapter    
-    @adapter = Adapters::S3Adapter.new(@conf[:adapter])
+  def load_adapter
+    begin
+      adapter = "Adapters::#{@conf[:adapter][:type]}".constantize
+    rescue
+      adapter = Adapters::S3Adapter
+    end
+    @adapter = adapter.new(@conf[:adapter])
   end
 
   def load_backup_manager
