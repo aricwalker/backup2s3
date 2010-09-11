@@ -21,7 +21,7 @@ class Adapters::S3cmdAdapter
   def fetch(file_name)
     ensure_connected
     file = Tempfile.new("temp")
-    System.run("s3cmd get s3://#{bucket}/#{file_name} #{file.path}")
+    System.run("s3cmd get --force s3://#{bucket}/#{file_name} #{file.path}")
     file
   end
 
