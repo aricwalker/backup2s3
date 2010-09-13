@@ -85,9 +85,13 @@ class Backup2s3
     if backup.nil? then
       puts "Backup with ID #{backup_id} does not exist."
       return
-    end    
-    begin @adapter.delete(backup.application_file) rescue puts "Could not delete #{backup.application_file}!" end
-    begin @adapter.delete(backup.database_file) rescue puts "Could not delete #{backup.database_file}!" end
+    end
+    if !backup.application_file.empty?
+      begin @adapter.delete(backup.application_file) rescue puts "Could not delete #{backup.application_file}!" end
+    end
+    if !backup.database_file.empty?
+      begin @adapter.delete(backup.database_file) rescue puts "Could not delete #{backup.database_file}!" end
+    end
     puts (@backup_manager.delete_backup(backup) ?
         "Backup with ID #{backup.time} was successfully deleted." :
         "Warning: Backup with ID #{backup.time} was not found and therefore not deleted.")

@@ -36,7 +36,12 @@ class Adapters::S3cmdAdapter
 #  end
 
   def delete(file_name)
-    System.run("s3cmd del s3://#{bucket}/#{file_name}")
+    #TODO use s3cmd ls here to create 'find' like functionality similar to s3_adapter
+    begin
+      System.run("s3cmd del s3://#{bucket}/#{file_name}")
+    rescue
+      raise "Could not delete #{file_name}."
+    end
   end
 
   private
