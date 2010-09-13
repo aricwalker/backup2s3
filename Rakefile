@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'echoe'
 
-Echoe.new('backup2s3', '0.2.1') do |p|
+Echoe.new('backup2s3', '0.2.2') do |p|
   p.description = "Backup2s3 is a gem that performs database and application backups and stores this data on Amazon S3."
   p.summary     = "Backup2s3 is a gem that creates, deletes and restores db and application backups."
   p.url         = "http://github.com/aricwalker/backup2s3"

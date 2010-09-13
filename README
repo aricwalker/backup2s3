@@ -17,13 +17,36 @@ SETUP:
 
 USAGE:
 
-  Backup tasks
+  2. Get started.
 
-    rake backup2s3:backup:create  - Creates a backup and moves it to S3
-    rake backup2s3:backup:delete  - Deletes the specific backup
-    rake backup2s3:backup:list    - Lists all backups that are currently on S3
-    rake backup2s3:backup:restore - Restores a specific backup
+      Backup tasks
 
-  Some handy tasks
+        Create -- Creates a backup and moves it to S3
+               -- comment - Add notes here to mark specific backups (optional)
 
-    rake backup2s3:statistics     - Shows you the size of your DB
+          rake backup2s3:backup:create
+          rake backup2s3:backup:create  comment='put notes about backup here if needed'
+
+
+        Delete  -- Deletes the specific backup
+                -- id - Backup to delete, backup ids will be found using List
+
+          rake backup2s3:backup:delete  id='20100913180541'
+
+
+        List    -- Lists all backups that are currently on S3
+                -- details - Setting details to true will display backup file names
+                             and backup comments (optional)
+
+          rake backup2s3:backup:list
+          rake backup2s3:backup:list  details=true
+
+
+        Restore -- Restores a specific backup
+                -- id - Backup to restore, backup ids will be found using List
+
+          rake backup2s3:backup:restore id='20100913180541'
+
+      Some handy tasks
+
+        rake backup2s3:statistics     - Shows you the size of your DB

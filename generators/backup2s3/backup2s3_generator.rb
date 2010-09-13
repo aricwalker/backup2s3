@@ -27,11 +27,32 @@ class Backup2s3Generator < Rails::Generator::Base
     2. Get started.
 
       Backup tasks
-      
-        rake backup2s3:backup:create  - Creates a backup and moves it to S3
-        rake backup2s3:backup:delete  - Deletes the specific backup
-        rake backup2s3:backup:list    - Lists all backups that are currently on S3
-        rake backup2s3:backup:restore - Restores a specific backup
+
+        Create -- Creates a backup and moves it to S3
+               -- comment - Add notes here to mark specific backups (optional)
+
+          rake backup2s3:backup:create
+          rake backup2s3:backup:create  comment='put notes about backup here if needed'
+
+
+        Delete  -- Deletes the specific backup
+                -- id - Backup to delete, backup ids will be found using List
+
+          rake backup2s3:backup:delete  id='20100913180541'
+
+
+        List    -- Lists all backups that are currently on S3
+                -- details - Setting details to true will display backup file names
+                             and backup comments (optional)
+
+          rake backup2s3:backup:list
+          rake backup2s3:backup:list  details=true
+
+
+        Restore -- Restores a specific backup
+                -- id - Backup to restore, backup ids will be found using List
+
+          rake backup2s3:backup:restore id='20100913180541'
 
       Some handy tasks
 

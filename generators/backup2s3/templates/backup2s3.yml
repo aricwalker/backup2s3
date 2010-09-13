@@ -1,4 +1,10 @@
 #Sample backup2s3 configuration file
+#
+#   Available adapter types:
+#     S3Adapter - Uses aws-s3 gem.
+#     S3cmdAdapter - Uses s3cmd 0.9.9.91 Python library found here: http://s3tools.org/s3cmd
+#
+#
 :backups:
   :max_number_of_backups: 5
   :backup_database: true
