@@ -1,5 +1,5 @@
 
-class Adapters::S3cmdAdapter
+class S3cmdAdapter
   include System
 
   def initialize(config)
@@ -47,7 +47,7 @@ class Adapters::S3cmdAdapter
   private
 
   def bucket
-    @bucket ||= clean("#{ActiveRecord::Base.connection.current_database.to_str.downcase}-ON-#{System.hostname.downcase}")
+    @bucket ||= clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
   end
 
   def clean(str)

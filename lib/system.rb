@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'yaml'
 
 module System
 
@@ -6,8 +7,9 @@ module System
     `hostname`.to_str.gsub!("\n", "")
   end
 
-  def self.db_credentials    
-    ActiveRecord::Base.configurations[RAILS_ENV]
+  def self.db_credentials
+    db_config = YAML.load_file("#{RAILS_ROOT}/config/database.yml")
+    db_config[RAILS_ENV]
   end
 
   # Run system commands

@@ -1,6 +1,6 @@
 require 'yaml'
 
-class BackupManagement::BackupManager
+class BackupManager
   include System
   
   attr_accessor :backup_list_filename, :backups

@@ -2,7 +2,7 @@
 # and open the template in the editor.
 require 'yaml'
 
-class BackupManagement::Backup
+class Backup
 
   attr_accessor :time, :application_file, :database_file, :comment
   

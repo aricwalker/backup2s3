@@ -3,6 +3,12 @@ require 'active_support'
 require 'tempfile'
 require 'yaml'
 
+require 'system.rb'
+require 'adapters/s3_adapter.rb'
+require 'adapters/s3cmd_adapter.rb'
+require 'backup_management/backup.rb'
+require 'backup_management/backup_manager.rb'
+
 class Backup2s3
   include System
 
@@ -73,7 +79,7 @@ class Backup2s3
       backup_to_delete = @backup_manager.get_oldest_backup
       delete_backup(backup_to_delete.time)
     end
-    backup = BackupManagement::Backup.new(@time, @application_file, @database_file, comment)
+    backup = Backup.new(@time, @application_file, @database_file, comment)
     @backup_manager.add_backup(backup)
     puts ""
   end
@@ -128,32 +134,32 @@ class Backup2s3
   # Creates instance of class used to interface with S3
   def load_adapter
     begin
-      adapter = "Adapters::#{@conf[:adapter][:type]}".constantize
+      adapter = "#{@conf[:adapter][:type]}".constantize
     rescue
-      adapter = Adapters::S3Adapter
+      adapter = S3Adapter
     end
     @adapter = adapter.new(@conf[:adapter])
   end
 
   def load_backup_manager
-    BackupManagement::BackupManager.new()
-    BackupManagement::Backup.new(nil, nil, nil)
-    begin           
-      @backup_manager = YAML.load_file(@adapter.fetch(BackupManagement::BackupManager.filename).path)
-      @backup_manager ||= YAML.load_file(BackupManagement::BackupManager.local_filename)
+    BackupManager.new()
+    Backup.new(nil, nil, nil)
+    begin
+      @backup_manager = YAML.load_file(@adapter.fetch(BackupManager.filename).path)
+      @backup_manager ||= YAML.load_file(BackupManager.local_filename)
     rescue
-      @backup_manager ||= BackupManagement::BackupManager.new
+      @backup_manager ||= BackupManager.new
     end
   end
 
   def save_backup_manager
     begin
-      File.open(BackupManagement::BackupManager.local_filename, "w") { |f| YAML.dump(@backup_manager, f) }
+      File.open(BackupManager.local_filename, "w") { |f| YAML.dump(@backup_manager, f) }
     rescue
-      puts "Unable to save local file: " << BackupManagement::BackupManager.local_filename
+      puts "Unable to save local file: " << BackupManager.local_filename
     end
     begin
-      @adapter.store(BackupManagement::BackupManager.filename, open(BackupManagement::BackupManager.local_filename))
+      @adapter.store(BackupManager.filename, open(BackupManager.local_filename))
     rescue
       puts "Unable to save BackupManager to S3"
     end

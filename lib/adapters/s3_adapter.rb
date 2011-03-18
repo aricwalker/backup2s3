@@ -1,7 +1,7 @@
 require 'aws/s3'
 
 
-class Adapters::S3Adapter
+class S3Adapter
   include System
 
   def initialize(config)
@@ -57,7 +57,7 @@ class Adapters::S3Adapter
   private
 
   def bucket    
-    @bucket ||= clean("#{ActiveRecord::Base.connection.current_database.to_str.downcase}-ON-#{System.hostname.downcase}")
+    @bucket ||= clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
   end
 
   def clean(str)
