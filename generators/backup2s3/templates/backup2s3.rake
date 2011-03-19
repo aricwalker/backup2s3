@@ -1,3 +1,5 @@
+require 'backup2s3'
+
 namespace :backup2s3 do
   namespace :backup do
     desc "Save a full backup to S3"
