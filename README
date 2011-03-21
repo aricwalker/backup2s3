@@ -5,7 +5,7 @@ SETUP:
 
   
   2. Add the below code to config/environment.rb
-  config.gem "backup2s3", :version => ">= 0.2.3"
+  config.gem "backup2s3", :version => ">= 0.2.4"
 
 
   3. Run the generator in your application root directory
