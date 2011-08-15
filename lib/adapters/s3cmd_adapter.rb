@@ -37,14 +37,7 @@ class S3cmdAdapter
   private
 
   def bucket
-    @bucket ||= clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
-  end
-
-  def clean(str)
-    str.gsub!(".", "-dot-")
-    str.gsub!("_", "-")
-    str.gsub!("\n", "")
-    return str
+    @bucket ||= System.clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
   end
 
 end

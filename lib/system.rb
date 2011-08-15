@@ -59,6 +59,14 @@ module System
     cmd += " -h '#{db_credentials['host']}'"    unless db_credentials['host'].nil?
     cmd += " #{db_credentials['database']}"
   end  
+  
+  def self.clean(str)
+    str.gsub!(".", "-dot-")
+    str.gsub!("_", "-")
+    str.gsub!("\n", "")
+    str.gsub!(/[^0-9a-z-_]/i, '')
+    return str
+  end
     
 end
 
