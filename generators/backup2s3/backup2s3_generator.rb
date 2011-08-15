@@ -52,11 +52,7 @@ class Backup2s3Generator < Rails::Generator::Base
         Restore -- Restores a specific backup
                 -- id - Backup to restore, backup ids will be found using List
 
-          rake backup2s3:backup:restore id='20100913180541'
-
-      Some handy tasks
-
-        rake backup2s3:statistics     - Shows you the size of your DB
+          rake backup2s3:backup:restore id='20100913180541'      
 
     -------------------------------------------------------------------
 

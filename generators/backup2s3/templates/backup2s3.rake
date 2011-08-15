@@ -21,13 +21,5 @@ namespace :backup2s3 do
     task :restore do
       Backup2s3.new.restore
     end
-  end
-
-  desc "Show table sizes for your database"
-  task :statistics => :environment do
-    rows = Backup2s3.new.statistics
-    rows.sort_by {|x| -x[3].to_i }
-    header = [["Type", "Data MB", "Index", "Rows", "Name"], []]
-    puts (header + rows).collect {|x| x.join("\t") }
-  end
+  end  
 end
