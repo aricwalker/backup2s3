@@ -1,10 +1,40 @@
 #Sample backup2s3 configuration file
 #
-#   Available adapter types:
-#     S3Adapter - Uses aws-s3 gem.
-#     S3cmdAdapter - Uses s3cmd 0.9.9.91 Python library found here: http://s3tools.org/s3cmd
+#  -backups section-
+#
+#     :max_number_of_backups - Sets the number of backups to keep related to this 
+#                              application on your S3 account. When the limit is
+#                              reached, the oldest backup will be deleted. 
+#     :backup_database - This is a boolean value.  Backup2s3 will backup your 
+#                        database if this is true and skip database backup if false.
+#     :backup_application_folder - An array of the top level application folders
+#                                  that Backup2s3 should tar, zip and backup to S3.
 #
 #
+#  -adapter section-
+#
+#     :type - The adapter type you would like to use. 
+#
+#             Currently available adapter types:
+#                 S3Adapter - Uses aws-s3 gem and does not provide a status/percentage 
+#                             report, failsafe or throttling.
+#                 S3cmdAdapter - Uses s3cmd 0.9.9.91 Python library found here: 
+#                                  http://s3tools.org/s3cmd
+#                                This adapter displays upload progress and also has 
+#                                failsafes and throttling incase an upload fails.
+#                                The failsafe will slow the upload speed and retry 
+#                                the upload incase of failure. 
+#
+#     :access_key_id - Your Amazon S3 access key id
+#
+#     :secret_access_key - Your Amazon S3 secret access key
+#
+#     :use_ssl - Uses an ssl connection for backups if set to true.
+#
+
+
+
+
 :backups:
   :max_number_of_backups: 5
   :backup_database: true

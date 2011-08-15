@@ -25,16 +25,6 @@ class S3cmdAdapter
     file
   end
 
-#  def read(file_name)
-#    ensure_connected
-#    return AWS::S3::S3Object.find(file_name, bucket)
-#  end
-
-#  def list
-#    ensure_connected
-#    AWS::S3::Bucket.find(bucket).objects.collect {|x| x.path }
-#  end
-
   def delete(file_name)
     #TODO use s3cmd ls here to create 'find' like functionality similar to s3_adapter
     begin

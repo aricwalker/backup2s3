@@ -35,7 +35,7 @@ class Backup2s3Generator < Rails::Generator::Base
           rake backup2s3:backup:create  comment='put notes about backup here if needed'
 
 
-        Delete  -- Deletes the specific backup
+        Delete  -- Deletes a backup specified by id parameter
                 -- id - Backup to delete, backup ids will be found using List
 
           rake backup2s3:backup:delete  id='20100913180541'
@@ -49,7 +49,7 @@ class Backup2s3Generator < Rails::Generator::Base
           rake backup2s3:backup:list  details=true
 
 
-        Restore -- Restores a specific backup
+        Restore -- Restores a backup specified by id parameter
                 -- id - Backup to restore, backup ids will be found using List
 
           rake backup2s3:backup:restore id='20100913180541'      
