@@ -1,11 +1,11 @@
 SETUP
 
     1. Install the gem
-    gem install backup2s3
+        gem install backup2s3
 
 
     2. Run the generator in your application root directory
-    script/generate backup2s3
+        script/generate backup2s3
 
 
     3. Change your settings in config/backup2s3.yml  
