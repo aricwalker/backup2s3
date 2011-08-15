@@ -3,16 +3,12 @@ SETUP:
   1. Install the gem
   gem install backup2s3
 
-  
-  2. Add the below code to config/environment.rb
-  config.gem "backup2s3", :version => ">= 0.2.4"
 
-
-  3. Run the generator in your application root directory
+  2. Run the generator in your application root directory
   script/generate backup2s3
 
 
-  4. Change your settings in config/backup2s3.yml  
+  3. Change your settings in config/backup2s3.yml  
 
 
 USAGE:
