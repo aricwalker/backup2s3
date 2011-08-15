@@ -1,48 +1,43 @@
-SETUP:
+SETUP
 
-  1. Install the gem
-  gem install backup2s3
-
-
-  2. Run the generator in your application root directory
-  script/generate backup2s3
+    1. Install the gem
+    gem install backup2s3
 
 
-  3. Change your settings in config/backup2s3.yml  
+    2. Run the generator in your application root directory
+    script/generate backup2s3
 
 
-USAGE:
-
-  2. Get started.
-
-      Backup tasks
-
-        Create -- Creates a backup and moves it to S3
-               -- comment - Add notes here to mark specific backups (optional)
-
-          rake backup2s3:backup:create
-          rake backup2s3:backup:create  comment='put notes about backup here if needed'
+    3. Change your settings in config/backup2s3.yml  
 
 
-        Delete  -- Deletes the specific backup
-                -- id - Backup to delete, backup ids will be found using List
-
-          rake backup2s3:backup:delete  id='20100913180541'
 
 
-        List    -- Lists all backups that are currently on S3
-                -- details - Setting details to true will display backup file names
-                             and backup comments (optional)
+USAGE (rake tasks)
+    
 
-          rake backup2s3:backup:list
-          rake backup2s3:backup:list  details=true
+    Create -- Creates a backup and moves it to S3
+           -- comment - Add notes here to mark specific backups (optional)
+
+      rake backup2s3:backup:create
+      rake backup2s3:backup:create  comment='put notes about backup here if needed'
 
 
-        Restore -- Restores a specific backup
-                -- id - Backup to restore, backup ids will be found using List
+    Delete  -- Deletes the specified backup
+            -- id - Backup to delete, backup ids will be found using List
 
-          rake backup2s3:backup:restore id='20100913180541'
+      rake backup2s3:backup:delete  id='20100913180541'
 
-      Some handy tasks
 
-        rake backup2s3:statistics     - Shows you the size of your DB
+    List    -- Lists all backups that are currently on S3
+            -- details - Setting details to true will display backup file names
+                         and backup comments (optional)
+
+      rake backup2s3:backup:list
+      rake backup2s3:backup:list  details=true
+
+
+    Restore -- Restores a specific backup
+            -- id - Backup to restore, backup ids will be found using List task
+
+      rake backup2s3:backup:restore id='20100913180541'
