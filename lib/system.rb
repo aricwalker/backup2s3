@@ -20,13 +20,19 @@ module System
 
   # Creates app tar file
   def self.tarzip_folders(folders)
-    application_tar = Tempfile.new("app")
-    if folders.is_a?(Array)      
-      cmd = "tar --dereference -czpf #{application_tar.path} #{folders.join(" ")}"
-    elsif folders.is_a?(String)
-      cmd = "tar --dereference -czpf #{application_tar.path} #{folders}"
-    end
-    run(cmd)
+    application_tar = Tempfile.new("app")    
+    ex_folders = ''
+    folders.each { |folder| 
+      unless File.exist?(folder) 
+        print "\nWARNING: Folder \'" + folder + "\' does not exist! Excluding from backup."
+      else
+        ex_folders << folder << ' '
+      end        
+    }      
+    if ex_folders.length > 0
+      cmd = "tar --dereference -czpf #{application_tar.path} #{ex_folders}"
+      run(cmd)
+    end    
     return application_tar
   end
 

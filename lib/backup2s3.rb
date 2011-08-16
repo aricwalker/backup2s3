@@ -60,7 +60,7 @@ class Backup2s3
       @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database") << ".sql"
       print "\nDumping database..."
       database_temp = System.db_dump      
-      puts "done\n- Database dump file size: " << database_temp.size.to_s << " B"; print "Backing up database dump file..."
+      puts "\ndone\n- Database dump file size: " << database_temp.size.to_s << " B"; print "Backing up database dump file..."
       @adapter.store(@database_file, open(database_temp.path))
       puts "done"
     end
@@ -69,7 +69,7 @@ class Backup2s3
       @application_file = System.clean("#{@time}-#{System.db_credentials['database']}-application") << ".tar.gz"
       print "\nZipping application folders..."
       application_temp = System.tarzip_folders(@conf[:backups][:backup_application_folders])
-      puts "done\n- Application tarball size: " << application_temp.size.to_s << " B"; print "Backing up application tarball..."
+      puts "\ndone\n- Application tarball size: " << application_temp.size.to_s << " B"; print "Backing up application tarball..."
       @adapter.store(@application_file, open(application_temp.path))
       puts "done"
     end
