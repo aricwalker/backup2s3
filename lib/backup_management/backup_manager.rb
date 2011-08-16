@@ -11,7 +11,7 @@ class BackupManager
   end
 
   def self.filename
-    System.clean("#{System.db_credentials['database']}_ON_#{System.hostname}_backups.yaml")
+    System.clean("#{System.db_credentials['database']}_ON_#{System.hostname}_backups") << ".yaml"
   end
 
   def self.local_filename
