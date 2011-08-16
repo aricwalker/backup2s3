@@ -5,7 +5,7 @@ SETUP
 
 
     2. Run the generator in your application root directory
-        script/generate backup2s3
+        rails g backup2s3
 
 
     3. Change your settings in config/backup2s3.yml  
