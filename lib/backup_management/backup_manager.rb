@@ -11,11 +11,11 @@ class BackupManager
   end
 
   def self.filename
-    System.clean("#{System.db_credentials['database']}_ON_#{System.hostname}_backups.yaml")
+    System.clean("#{System.db_credentials['database']}_ON_#{System.hostname}_backups") << ".yaml"
   end
 
   def self.local_filename
-    "#{RAILS_ROOT}/lib/#{filename}"
+    "#{Rails.root.to_s}/lib/#{filename}"
   end
 
   def add_backup(backup)

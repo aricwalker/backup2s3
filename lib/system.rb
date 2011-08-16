@@ -8,8 +8,8 @@ module System
   end
 
   def self.db_credentials
-    db_config = YAML.load_file("#{RAILS_ROOT}/config/database.yml")
-    db_config[RAILS_ENV]
+    db_config = YAML.load_file("#{Rails.root.to_s}/config/database.yml")
+    db_config[Rails.env]
   end
 
   # Run system commands
@@ -64,7 +64,7 @@ module System
     str.gsub!(".", "-dot-")
     str.gsub!("_", "-")
     str.gsub!("\n", "")
-    str.gsub!(/[^0-9a-z-_]/i, '')
+    str.gsub!(/[^0-9a-z\-_]/i, '')
     return str
   end
     

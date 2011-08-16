@@ -57,7 +57,7 @@ class Backup2s3
   # information.
   def create_backup(comment)
     if @conf[:backups][:backup_database]
-      @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database.sql")
+      @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database") << ".sql"
       print "\nDumping database..."
       database_temp = System.db_dump      
       puts "done\n- Database dump file size: " << database_temp.size.to_s << " B"; print "Backing up database dump file..."
@@ -66,7 +66,7 @@ class Backup2s3
     end
     
     if @conf[:backups][:backup_application_folders].is_a?(Array)
-      @application_file = System.clean("#{@time}-#{System.db_credentials['database']}-application.tar.gz")
+      @application_file = System.clean("#{@time}-#{System.db_credentials['database']}-application") << ".tar.gz"
       print "\nZipping application folders..."
       application_temp = System.tarzip_folders(@conf[:backups][:backup_application_folders])
       puts "done\n- Application tarball size: " << application_temp.size.to_s << " B"; print "Backing up application tarball..."
@@ -128,7 +128,7 @@ class Backup2s3
 
   # Loads the config/backup2s3.yml configuration file
   def load_configuration
-    @conf = YAML.load_file("#{RAILS_ROOT}/config/backup2s3.yml")
+    @conf = YAML.load_file("#{Rails.root.to_s}/config/backup2s3.yml")
   end
 
   # Creates instance of class used to interface with S3
