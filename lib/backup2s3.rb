@@ -59,12 +59,12 @@ class Backup2s3
     if @conf[:backups][:backup_database]
       @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database") << ".sql"
       print "\nDumping database..."
-      database_temp = System.db_dump      
+      database_temp = System.db_dump
       puts "\ndone\n- Database dump file size: " << database_temp.size.to_s << " B"; print "Backing up database dump file..."
       @adapter.store(@database_file, open(database_temp.path))
       puts "done"
     end
-    
+
     if @conf[:backups][:backup_application_folders].is_a?(Array)
       @application_file = System.clean("#{@time}-#{System.db_credentials['database']}-application") << ".tar.gz"
       print "\nZipping application folders..."
@@ -85,7 +85,7 @@ class Backup2s3
   end
 
   # Deletes the Backup, application backup files and database files associated
-  # with the Backup identified by backup_id.  
+  # with the Backup identified by backup_id.
   def delete_backup(backup_id)
     backup = @backup_manager.get_backup(backup_id)
     if backup.nil? then
@@ -163,6 +163,6 @@ class Backup2s3
     rescue
       puts "Unable to save BackupManager to S3"
     end
-  end 
+  end
 
 end

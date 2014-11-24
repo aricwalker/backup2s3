@@ -3,6 +3,8 @@ require 'aws-sdk'
 class S3Adapter
   include System
 
+  DEFAULT_REGION = 'us-east-1'
+
   def initialize(config)
     @config = config
     @connected = false
@@ -12,50 +14,46 @@ class S3Adapter
   def ensure_connected
     return if @connected
     credentials = Aws::Credentials.new(@config[:access_key_id], @config[:secret_access_key])
-    @client = Aws::S3::Client.new(credentials: credentials)
+    @client = Aws::S3::Client.new(credentials: credentials,
+      region: (@config[:secret_access_key] || DEFAULT_REGION))
+
     begin
-      @client.create_bucket(acl: "private", bucket: bucket)
+      response = @client.create_bucket(acl: "private", bucket: bucket)
       @connected = true
-    rescue Errors::BucketAlreadyExists
-      @connected = true
-    rescue
+    rescue Errors::BucketAlreadyExists => e
+      puts "Bucket name is already taken -- #{e}"
+      @connected = false
+    rescue Exception => e
+      puts "Unable to create bucket -- #{e}"
       @connected = false
     end
   end
 
   def store(file_name, file)
     ensure_connected
-    # AWS::S3::S3Object.store(file_name, file, bucket)
+    @client.put_object(bucket: bucket, key: file_name, body: file)
   end
 
   def fetch(file_name)
     ensure_connected
-    # AWS::S3::S3Object.find(file_name, bucket)
-
-    # file = Tempfile.new("temp")
-    # open(file.path, 'w') do |f|
-    #   AWS::S3::S3Object.stream(file_name, bucket) do |chunk|
-    #     f.write chunk
-    #   end
-    # end
-    # file
+    file = Tempfile.new("temp")
+    @client.get_object(bucket: bucket, key: file_name, response_target: file.path)
+    return file
   end
 
   def read(file_name)
     ensure_connected
-    # return AWS::S3::S3Object.find(file_name, bucket)
+    return @client.head_object(bucket: bucket, key: file_name)
   end
 
   def list
     ensure_connected
-    # AWS::S3::Bucket.find(bucket).objects.collect {|x| x.path }
+    return @client.list_objects(bucket: bucket).data.contents.collect { |x| x.key }
   end
 
   def delete(file_name)
     ensure_connected
-    # if object = AWS::S3::S3Object.find(file_name, bucket)
-    #   object.delete
-    # end
+    @client.delete_object(bucket: bucket, key: file_name)
   end
 
   private
