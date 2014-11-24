@@ -5,8 +5,10 @@
 #     :max_number_of_backups - Sets the number of backups to keep related to this 
 #                              application on your S3 account. When the limit is
 #                              reached, the oldest backup will be deleted. 
+#
 #     :backup_database - This is a boolean value.  Backup2s3 will backup your 
 #                        database if this is true and skip database backup if false.
+#
 #     :backup_application_folder - An array of the top level application folders
 #                                  that Backup2s3 should tar, zip and backup to S3.
 #
@@ -16,10 +18,9 @@
 #     :type - The adapter type you would like to use. 
 #
 #             Currently available adapter types:
-#                 S3Adapter - Uses aws-s3 gem and does not provide a status/percentage 
-#                             report, failsafe or throttling.
-#                 S3cmdAdapter - Uses s3cmd 0.9.9.91 Python library found here: 
-#                                  http://s3tools.org/s3cmd
+#                 S3Adapter - Uses aws-sdk gem V2.
+#
+#                 S3cmdAdapter - Uses s3cmd 0.9.9.91 Python library found here: http://s3tools.org/s3cmd
 #                                This adapter displays upload progress and also has 
 #                                failsafes and throttling incase an upload fails.
 #                                The failsafe will slow the upload speed and retry 

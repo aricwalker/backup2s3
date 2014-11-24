@@ -1,1 +1,0 @@
-require 'backup2s3'

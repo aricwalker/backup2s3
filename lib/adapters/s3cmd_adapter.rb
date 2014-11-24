@@ -36,6 +36,7 @@ class S3cmdAdapter
 
   private
 
+  # TODO move to abstract class
   def bucket
     @bucket ||= System.clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
   end
