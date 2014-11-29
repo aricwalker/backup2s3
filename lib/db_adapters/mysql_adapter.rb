@@ -1,5 +1,6 @@
 
 class MysqlAdapter
+  include System
 
   def initialize(db_credentials)
     @db_credentials = db_credentials
@@ -11,14 +12,14 @@ class MysqlAdapter
     dump_file = Tempfile.new("dump")
     cmd = "mysqldump --quick --single-transaction --create-options #{db_options}"
     cmd += " > #{dump_file.path}"
-    run(cmd)
+    System.run(cmd)
     return dump_file
   end
 
   def load_db_dump(dump_file)
     cmd = "mysql #{mysql_options}"
     cmd += " < #{dump_file.path}"
-    run(cmd)
+    System.run(cmd)
     true
   end
 

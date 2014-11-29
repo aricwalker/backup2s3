@@ -4,8 +4,10 @@ require 'tempfile'
 require 'yaml'
 
 require 'system'
-require 's3_adapters/s3_adapter'
+require 's3_adapters/aws_adapter'
 require 's3_adapters/s3cmd_adapter'
+require 'db_adapters/mysql_adapter'
+require 'db_adapters/postgresql_adapter'
 require 'backup_management/backup'
 require 'backup_management/backup_manager'
 
@@ -149,8 +151,8 @@ class Backup2s3
   def load_db_adapter
     db_credentials = System.db_credentials
     @db_adapter = nil
-    @db_adapter ||= PostgresqlAdapter.new(db_credentials) if db_adapter['adapter'].include?(POSTGRESQL)
-    @db_adapter ||= MysqlAdapter.new(db_credentials) if db_adapter['adapter'].include?(MYSQL)
+    @db_adapter ||= PostgresqlAdapter.new(db_credentials) if db_credentials['adapter'].include?(POSTGRESQL)
+    @db_adapter ||= MysqlAdapter.new(db_credentials) if db_credentials['adapter'].include?(MYSQL)
     if @db_adapter.nil?
       raise "Backup2s3 only supports database backups for MySQL or PostgreSQL."
     end
