@@ -3,11 +3,11 @@ class Backup2s3Generator < Rails::Generators::Base
   def self.source_root
     @source_root ||= File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
   end
-  
-  def generate    
+
+  def generate
     copy_file("backup2s3.rake", "lib/tasks/backup2s3.rake")
     copy_file("backup2s3.yml", "config/backup2s3.yml")
-    puts message        
+    puts message
   end
 
   def message
@@ -49,7 +49,7 @@ class Backup2s3Generator < Rails::Generators::Base
         Restore -- Restores a backup specified by id parameter
                 -- id - Backup to restore, backup ids will be found using List
 
-          rake backup2s3:backup:restore id='20100913180541'      
+          rake backup2s3:backup:restore id='20100913180541'
 
     -------------------------------------------------------------------
 
