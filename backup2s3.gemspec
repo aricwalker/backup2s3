@@ -8,8 +8,10 @@ Gem::Specification.new do |spec|
   spec.files         = [
     "lib/backup2s3.rb",
     "lib/system.rb",
-    "lib/adapters/s3_adapter.rb",
-    "lib/adapters/s3cmd_adapter.rb",
+    "lib/s3_adapters/aws_adapter.rb",
+    "lib/s3_adapters/s3cmd_adapter.rb",
+    "lib/db_adapters/mysql_adapter.rb",
+    "lib/db_adapters/postgresql_adapter.rb",
     "lib/backup_management/backup.rb",
     "lib/backup_management/backup_manager.rb",
     "lib/generators/backup2s3/backup2s3_generator.rb",

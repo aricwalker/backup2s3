@@ -1,6 +1,6 @@
 require 'aws-sdk'
 
-class S3Adapter
+class AwsAdapter
   include System
 
   DEFAULT_REGION = 'us-east-1'

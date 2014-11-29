@@ -41,31 +41,6 @@ module System
     run(cmd)
   end
 
-  # Creates and runs mysqldump and throws into .tar.gz file.
-  # Returns .tar.gz file
-  def self.db_dump
-    dump_file = Tempfile.new("dump")
-    cmd = "mysqldump --quick --single-transaction --create-options #{mysql_options}"
-    cmd += " > #{dump_file.path}"
-    run(cmd)
-    return dump_file
-  end
-
-  def self.load_db_dump(dump_file)
-    cmd = "mysql #{mysql_options}"
-    cmd += " < #{dump_file.path}"
-    run(cmd)
-    true
-  end
-
-  def self.mysql_options
-    cmd = ''
-    cmd += " -u #{db_credentials['username']} " unless db_credentials['username'].nil?
-    cmd += " -p'#{db_credentials['password']}'" unless db_credentials['password'].nil?
-    cmd += " -h '#{db_credentials['host']}'"    unless db_credentials['host'].nil?
-    cmd += " #{db_credentials['database']}"
-  end
-
   def self.clean(str)
     str.gsub!(".", "-dot-")
     str.gsub!("_", "-")
