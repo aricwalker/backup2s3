@@ -11,14 +11,14 @@ class PostgresqlAdapter
   def db_dump
     dump_file = Tempfile.new("dump")
     cmd = "PGPASSWORD=\"#{@db_credentials['password']}\" pg_dump #{db_options} -f #{dump_file.path}"
-    puts "RUNNING: #{cmd}"
+    print "RUNNING: #{cmd}"
     System.run(cmd)
     return dump_file
   end
 
   def load_db_dump(dump_file)
     cmd = "psql #{db_options} -f #{dump_file.path}"
-    puts "RUNNING: #{cmd}"
+    print "RUNNING: #{cmd}"
     System.run(cmd)
     true
   end

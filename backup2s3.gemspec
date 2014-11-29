@@ -21,5 +21,5 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'http://rubygems.org/gems/backup2s3'
   spec.license       = "MIT"
 
-  spec.add_runtime_dependency 'aws-sdk', '~> 2.0.10.pre'
+  spec.add_runtime_dependency 'aws-sdk', '~> 1.59', '>= 1.59.0'
 end

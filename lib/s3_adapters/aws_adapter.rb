@@ -13,16 +13,12 @@ class AwsAdapter
 
   def ensure_connected
     return if @connected
-    credentials = Aws::Credentials.new(@config[:access_key_id], @config[:secret_access_key])
-    @client = Aws::S3::Client.new(credentials: credentials,
-      region: (@config[:secret_access_key] || DEFAULT_REGION))
+    @client = AWS::S3.new(:access_key_id => @config[:access_key_id],
+      :secret_access_key => @config[:secret_access_key])
 
     begin
-      response = @client.create_bucket(acl: "private", bucket: bucket)
+      create_bucket
       @connected = true
-    rescue Errors::BucketAlreadyExists => e
-      puts "Bucket name is already taken -- #{e}"
-      @connected = false
     rescue Exception => e
       puts "Unable to create bucket -- #{e}"
       @connected = false
@@ -31,7 +27,8 @@ class AwsAdapter
 
   def store(file_name, file)
     ensure_connected
-    @client.put_object(bucket: bucket, key: file_name, body: file)
+    bucket_object = @bucket.objects[file_name]
+    bucket_object.write(Pathname.new(file.path))
   end
 
   def fetch(file_name)
@@ -59,8 +56,13 @@ class AwsAdapter
   private
 
   # TODO move to abstract class
-  def bucket
-    @bucket ||= System.clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
+  def create_bucket
+    if @bucket.nil?
+      bucket_name = System.clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
+      @bucket = @client.buckets[bucket_name]
+      @bucket = @client.buckets.create(bucket_name) if !@bucket.exists?
+    end
+    @bucket
   end
 
 end
