@@ -44,16 +44,6 @@ class AwsAdapter
     return file
   end
 
-  def read(file_name)
-    ensure_connected
-    @bucket.objects[file_name].exists?
-  end
-
-  def list
-    ensure_connected
-    @bucket.objects
-  end
-
   def delete(file_name)
     ensure_connected
     @bucket.objects[file_name].delete
