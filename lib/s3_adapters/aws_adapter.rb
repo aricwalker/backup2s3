@@ -8,16 +8,16 @@ class AwsAdapter
   def initialize(config)
     @config = config
     @connected = false
-    @client = nil
+    @bucket = nil
   end
 
   def ensure_connected
     return if @connected
-    @client = AWS::S3.new(:access_key_id => @config[:access_key_id],
+    client = AWS::S3.new(:access_key_id => @config[:access_key_id],
       :secret_access_key => @config[:secret_access_key])
 
     begin
-      create_bucket
+      create_bucket(client)
       @connected = true
     rescue Exception => e
       puts "Unable to create bucket -- #{e}"
@@ -34,33 +34,39 @@ class AwsAdapter
   def fetch(file_name)
     ensure_connected
     file = Tempfile.new("temp")
-    @client.get_object(bucket: bucket, key: file_name, response_target: file.path)
+    bucket_object = @bucket.objects[file_name]
+
+    File.open(file.path, 'wb') do |f|
+      bucket_object.read do |chunk|
+        f.write chunk
+      end
+    end
     return file
   end
 
   def read(file_name)
     ensure_connected
-    return @client.head_object(bucket: bucket, key: file_name)
+    @bucket.objects[file_name].exists?
   end
 
   def list
     ensure_connected
-    return @client.list_objects(bucket: bucket).data.contents.collect { |x| x.key }
+    @bucket.objects
   end
 
   def delete(file_name)
     ensure_connected
-    @client.delete_object(bucket: bucket, key: file_name)
+    @bucket.objects[file_name].delete
   end
 
   private
 
   # TODO move to abstract class
-  def create_bucket
+  def create_bucket(client)
     if @bucket.nil?
       bucket_name = System.clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
-      @bucket = @client.buckets[bucket_name]
-      @bucket = @client.buckets.create(bucket_name) if !@bucket.exists?
+      @bucket = client.buckets[bucket_name]
+      @bucket = client.buckets.create(bucket_name) if !@bucket.exists?
     end
     @bucket
   end
