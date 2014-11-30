@@ -128,7 +128,7 @@ class Backup2s3
     puts "done";
 
     print "Restoring database from database dump file..."
-    @db_adapter.db_dump(dump_file)
+    @db_adapter.load_db_dump(dump_file)
     puts "done\n\n"
   end
 

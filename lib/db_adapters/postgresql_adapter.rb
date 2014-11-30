@@ -10,15 +10,13 @@ class PostgresqlAdapter
   # Returns .tar.gz file
   def db_dump
     dump_file = Tempfile.new("dump")
-    cmd = "PGPASSWORD=\"#{@db_credentials['password']}\" pg_dump #{db_options} -f #{dump_file.path}"
-    print "RUNNING: #{cmd}"
+    cmd = "PGPASSWORD=\"#{@db_credentials['password']}\" pg_dump #{db_options} #{@db_credentials['database']} > #{dump_file.path}"
     System.run(cmd)
-    return dump_file
+    dump_file
   end
 
   def load_db_dump(dump_file)
-    cmd = "psql #{db_options} -f #{dump_file.path}"
-    print "RUNNING: #{cmd}"
+    cmd = "PGPASSWORD=\"#{@db_credentials['password']}\" pg_restore #{db_options} #{dump_file.path}"
     System.run(cmd)
     true
   end
@@ -29,6 +27,6 @@ class PostgresqlAdapter
     cmd = ''
     cmd += " -U #{@db_credentials['username']} " unless @db_credentials['username'].nil?
     cmd += " -h #{@db_credentials['host'] || 'localhost'} "
-    cmd += " #{@db_credentials['database']}"
+    cmd += " -Fc "
   end
 end
