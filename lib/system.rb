@@ -49,5 +49,15 @@ module System
     return str
   end
 
+  def self.prompt(prompt, noecho = false)
+    STDOUT.print prompt
+    STDOUT.flush
+    if noecho
+      return STDIN.noecho(&:gets).chomp
+    else
+      return STDIN.gets.chomp
+    end
+  end
+
 end
 
