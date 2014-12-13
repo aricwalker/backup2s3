@@ -12,33 +12,21 @@ class PostgresqlAdapter
     password = @db_credentials['password']
     database = @db_credentials['database']
     cmd = "PGPASSWORD=\"#{password}\" pg_dump #{db_options} --verbose -Ft #{database} > #{dump_file.path}"
-    print "Running '#{cmd}'"
     System.run(cmd)
     dump_file
   end
 
   def load_db_dump(dump_file)
     database = @db_credentials['database']
+    host = @db_credentials['host'] || 'localhost'
     superuser = System.prompt "Postgres superuser: "
     su_password = System.prompt "#{superuser} password: "
     cmd = "PGPASSWORD=\"#{su_password}\" && PGUSER=\"#{superuser}\"; " +
-      "dropdb --host localhost #{database}; " +
-      "createdb --host localhost -T template0 #{database} "
-    puts "RUNNING #{cmd}"
-    System.run(cmd)
-
-    cmd = "pg_restore --host localhost --verbose -Ft --dbname=#{database} #{dump_file.path}"
-    puts "RUNNING #{cmd}"
+      "dropdb --host #{host} #{database}; " +
+      "createdb --host #{host} -T template0 #{database}; " +
+      "pg_restore --host #{host} -Ft --dbname=#{database} #{dump_file.path}"
     System.run(cmd)
     true
-  end
-
-  private
-
-  def db_options
-    cmd = ''
-    cmd += " --username #{@db_credentials['username']} " unless @db_credentials['username'].nil?
-    cmd += " --host #{@db_credentials['host'] || 'localhost'} "
   end
 
 end

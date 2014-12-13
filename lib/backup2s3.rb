@@ -127,7 +127,7 @@ class Backup2s3
     dump_file = @s3_adapter.fetch(backup.database_file)
     puts "done";
 
-    print "Restoring database from database dump file..."
+    puts "Restoring database from database dump file...\n"
     @db_adapter.load_db_dump(dump_file)
     puts "done\n\n"
   end
