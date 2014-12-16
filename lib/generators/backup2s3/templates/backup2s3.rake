@@ -21,5 +21,5 @@ namespace :backup2s3 do
     task :restore do
       Backup2s3.new.restore
     end
-  end  
+  end
 end

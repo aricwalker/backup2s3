@@ -1,7 +1,4 @@
-spec/s3_config.rb
-db2s3.gemspec
-pkg
-nbproject
+*.gem
 .DS_Store
 
 

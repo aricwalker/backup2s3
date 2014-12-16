@@ -20,19 +20,19 @@ module System
 
   # Creates app tar file
   def self.tarzip_folders(folders)
-    application_tar = Tempfile.new("app")    
+    application_tar = Tempfile.new("app")
     ex_folders = ''
-    folders.each { |folder| 
-      unless File.exist?(folder) 
+    folders.each { |folder|
+      unless File.exist?(folder)
         print "\nWARNING: Folder \'" + folder + "\' does not exist! Excluding from backup."
       else
         ex_folders << folder << ' '
-      end        
-    }      
+      end
+    }
     if ex_folders.length > 0
       cmd = "tar --dereference -czpf #{application_tar.path} #{ex_folders}"
       run(cmd)
-    end    
+    end
     return application_tar
   end
 
@@ -41,31 +41,6 @@ module System
     run(cmd)
   end
 
-  # Creates and runs mysqldump and throws into .tar.gz file.
-  # Returns .tar.gz file
-  def self.db_dump
-    dump_file = Tempfile.new("dump")
-    cmd = "mysqldump --quick --single-transaction --create-options #{mysql_options}"
-    cmd += " > #{dump_file.path}"
-    run(cmd)
-    return dump_file
-  end
-
-  def self.load_db_dump(dump_file)
-    cmd = "mysql #{mysql_options}"
-    cmd += " < #{dump_file.path}"
-    run(cmd)
-    true
-  end
-
-  def self.mysql_options
-    cmd = ''
-    cmd += " -u #{db_credentials['username']} " unless db_credentials['username'].nil?
-    cmd += " -p'#{db_credentials['password']}'" unless db_credentials['password'].nil?
-    cmd += " -h '#{db_credentials['host']}'"    unless db_credentials['host'].nil?
-    cmd += " #{db_credentials['database']}"
-  end  
-  
   def self.clean(str)
     str.gsub!(".", "-dot-")
     str.gsub!("_", "-")
@@ -73,6 +48,16 @@ module System
     str.gsub!(/[^0-9a-z\-_]/i, '')
     return str
   end
-    
+
+  def self.prompt(prompt, noecho = false)
+    STDOUT.print prompt
+    STDOUT.flush
+    if noecho
+      return STDIN.noecho(&:gets).chomp
+    else
+      return STDIN.gets.chomp
+    end
+  end
+
 end
 

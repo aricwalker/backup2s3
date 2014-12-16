@@ -26,7 +26,7 @@ class S3cmdAdapter
   end
 
   def delete(file_name)
-    #TODO use s3cmd ls here to create 'find' like functionality similar to s3_adapter
+    #TODO use s3cmd ls here to create 'find' like functionality similar to aws_adapter
     begin
       System.run("s3cmd del s3://#{bucket}/#{file_name}")
     rescue
@@ -36,6 +36,7 @@ class S3cmdAdapter
 
   private
 
+  # TODO move to abstract class
   def bucket
     @bucket ||= System.clean("#{System.db_credentials['database'].downcase}-ON-#{System.hostname.downcase}")
   end

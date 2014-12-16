@@ -11,12 +11,12 @@ SETUP
         rails g backup2s3
 
 
-    4. Change your settings in config/backup2s3.yml  
+    4. Change your settings in config/backup2s3.yml
 
 
 
 USAGE (rake tasks)
-    
+
 
     Create -- Creates a backup and moves it to S3
            -- comment - Add notes here to mark specific backups (optional)

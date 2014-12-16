@@ -2,11 +2,11 @@ require 'yaml'
 
 class BackupManager
   include System
-  
+
   attr_accessor :backup_list_filename, :backups
 
 
-  def initialize    
+  def initialize
     self.backups = Array.new
   end
 
@@ -61,10 +61,10 @@ class BackupManager
       count = count.next
     end
     puts "-----------------------\n\n"
-  end  
+  end
 
   def number_of_backups
     backups.size
   end
-  
+
 end

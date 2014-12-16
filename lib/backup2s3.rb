@@ -3,20 +3,26 @@ require 'active_support'
 require 'tempfile'
 require 'yaml'
 
-require 'system.rb'
-require 'adapters/s3_adapter.rb'
-require 'adapters/s3cmd_adapter.rb'
-require 'backup_management/backup.rb'
-require 'backup_management/backup_manager.rb'
+require 'system'
+require 's3_adapters/aws_adapter'
+require 's3_adapters/s3cmd_adapter'
+require 'db_adapters/mysql_adapter'
+require 'db_adapters/postgresql_adapter'
+require 'backup_management/backup'
+require 'backup_management/backup_manager'
 
 class Backup2s3
   include System
+
+  POSTGRESQL = 'postgresql'
+  MYSQL = 'mysql'
 
   def initialize
     STDOUT.sync = true #used so that print will not buffer output
     #ActiveResource::Base.logger = true
     load_configuration
-    load_adapter
+    load_s3_adapter
+    load_db_adapter
     load_backup_manager
     @database_file = ""
     @application_file = ""
@@ -59,18 +65,18 @@ class Backup2s3
     if @conf[:backups][:backup_database]
       @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database") << ".sql"
       print "\nDumping database..."
-      database_temp = System.db_dump      
+      database_temp = @db_adapter.db_dump
       puts "\ndone\n- Database dump file size: " << database_temp.size.to_s << " B"; print "Backing up database dump file..."
-      @adapter.store(@database_file, open(database_temp.path))
+      @s3_adapter.store(@database_file, open(database_temp.path))
       puts "done"
     end
-    
+
     if @conf[:backups][:backup_application_folders].is_a?(Array)
       @application_file = System.clean("#{@time}-#{System.db_credentials['database']}-application") << ".tar.gz"
       print "\nZipping application folders..."
       application_temp = System.tarzip_folders(@conf[:backups][:backup_application_folders])
       puts "\ndone\n- Application tarball size: " << application_temp.size.to_s << " B"; print "Backing up application tarball..."
-      @adapter.store(@application_file, open(application_temp.path))
+      @s3_adapter.store(@application_file, open(application_temp.path))
       puts "done"
     end
 
@@ -85,7 +91,7 @@ class Backup2s3
   end
 
   # Deletes the Backup, application backup files and database files associated
-  # with the Backup identified by backup_id.  
+  # with the Backup identified by backup_id.
   def delete_backup(backup_id)
     backup = @backup_manager.get_backup(backup_id)
     if backup.nil? then
@@ -93,10 +99,10 @@ class Backup2s3
       return
     end
     if !backup.application_file.empty?
-      begin @adapter.delete(backup.application_file) rescue puts "Could not delete #{backup.application_file}!" end
+      begin @s3_adapter.delete(backup.application_file) rescue puts "Could not delete #{backup.application_file}!" end
     end
     if !backup.database_file.empty?
-      begin @adapter.delete(backup.database_file) rescue puts "Could not delete #{backup.database_file}!" end
+      begin @s3_adapter.delete(backup.database_file) rescue puts "Could not delete #{backup.database_file}!" end
     end
     puts (@backup_manager.delete_backup(backup) ?
         "Backup with ID #{backup.time} was successfully deleted." :
@@ -110,7 +116,7 @@ class Backup2s3
       return
     end
     print "\nRetrieving application tarball..."
-    application_file = @adapter.fetch(backup.application_file)
+    application_file = @s3_adapter.fetch(backup.application_file)
     puts "done"
 
     print "Restoring application from application tarball..."
@@ -118,11 +124,11 @@ class Backup2s3
     puts "done\n"
 
     print "\nRetrieving database dump_file..."
-    dump_file = @adapter.fetch(backup.database_file)
+    dump_file = @s3_adapter.fetch(backup.database_file)
     puts "done";
 
-    print "Restoring database from database dump file..."
-    System.load_db_dump(dump_file)
+    puts "Restoring database from database dump file...\n"
+    @db_adapter.load_db_dump(dump_file)
     puts "done\n\n"
   end
 
@@ -132,20 +138,31 @@ class Backup2s3
   end
 
   # Creates instance of class used to interface with S3
-  def load_adapter
+  def load_s3_adapter
     begin
       adapter = "#{@conf[:adapter][:type]}".constantize
     rescue
-      adapter = S3Adapter
+      adapter = AwsAdapter
     end
-    @adapter = adapter.new(@conf[:adapter])
+    @s3_adapter = adapter.new(@conf[:adapter])
+  end
+
+  # Creates instance of class used to interface with the DB
+  def load_db_adapter
+    db_credentials = System.db_credentials
+    @db_adapter = nil
+    @db_adapter ||= PostgresqlAdapter.new(db_credentials) if db_credentials['adapter'].include?(POSTGRESQL)
+    @db_adapter ||= MysqlAdapter.new(db_credentials) if db_credentials['adapter'].include?(MYSQL)
+    if @db_adapter.nil?
+      raise "Backup2s3 only supports database backups for MySQL or PostgreSQL."
+    end
   end
 
   def load_backup_manager
     BackupManager.new()
     Backup.new(nil, nil, nil)
     begin
-      @backup_manager = YAML.load_file(@adapter.fetch(BackupManager.filename).path)
+      @backup_manager = YAML.load_file(@s3_adapter.fetch(BackupManager.filename).path)
       @backup_manager ||= YAML.load_file(BackupManager.local_filename)
     rescue
       @backup_manager ||= BackupManager.new
@@ -159,10 +176,10 @@ class Backup2s3
       puts "Unable to save local file: " << BackupManager.local_filename
     end
     begin
-      @adapter.store(BackupManager.filename, open(BackupManager.local_filename))
+      @s3_adapter.store(BackupManager.filename, open(BackupManager.local_filename))
     rescue
       puts "Unable to save BackupManager to S3"
     end
-  end 
+  end
 
 end

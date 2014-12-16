@@ -5,7 +5,7 @@ require 'yaml'
 class Backup
 
   attr_accessor :time, :application_file, :database_file, :comment
-  
+
   def initialize(time, application_file, database_file, comment = nil)
     self.time = time
     self.application_file = application_file
