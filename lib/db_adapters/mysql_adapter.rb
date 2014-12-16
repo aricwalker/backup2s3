@@ -17,7 +17,7 @@ class MysqlAdapter
   end
 
   def load_db_dump(dump_file)
-    cmd = "mysql #{mysql_options}"
+    cmd = "mysql #{db_options}"
     cmd += " < #{dump_file.path}"
     System.run(cmd)
     true
