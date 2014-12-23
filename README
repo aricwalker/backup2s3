@@ -1,17 +1,12 @@
 SETUP
 
-    1. Install the gem
-        gem install backup2s3
-
-    2. Add these dependencies to your application Gemfile
+    1. Add the dependencies to your Gemfile
         gem 'backup2s3'
-        gem 'aws-s3'
 
-    3. Run the generator in your application root directory
+    2. Run the generator in your application root directory
         rails g backup2s3
 
-
-    4. Change your settings in config/backup2s3.yml
+    3. Change your settings in config/backup2s3.yml
 
 
 
