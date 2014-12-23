@@ -11,7 +11,7 @@ class PostgresqlAdapter
     dump_file = Tempfile.new("dump")
     password = @db_credentials['password']
     database = @db_credentials['database']
-    cmd = "PGPASSWORD=\"#{password}\" pg_dump #{db_options} --verbose -Ft #{database} > #{dump_file.path}"
+    cmd = "PGPASSWORD=\"#{password}\" pg_dump -Ft #{database} > #{dump_file.path}"
     System.run(cmd)
     dump_file
   end
@@ -26,7 +26,6 @@ class PostgresqlAdapter
       "createdb --host #{host} -T template0 #{database}; " +
       "pg_restore --host #{host} -Ft --dbname=#{database} #{dump_file.path}"
     System.run(cmd)
-    true
   end
 
 end
