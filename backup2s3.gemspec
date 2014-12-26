@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "backup2s3"
-  spec.version       = "0.4.0"
+  spec.version       = "0.4.0.pre"
   spec.authors       = ["Aric Walker"]
   spec.email         = ["aric.walker@gmail.com"]
   spec.description   = "Backup2s3 is a gem that performs database and application backups and stores the data on Amazon S3."
