@@ -9,9 +9,10 @@ class PostgresqlAdapter
   # Returns .tar.gz file
   def db_dump
     dump_file = Tempfile.new("dump")
+    username = @db_credentials['username']
     password = @db_credentials['password']
     database = @db_credentials['database']
-    cmd = "PGPASSWORD=\"#{password}\" pg_dump -Ft #{database} > #{dump_file.path}"
+    cmd = "PGPASSWORD=\"#{password}\" PGUSER=\"#{username}\" pg_dump -Ft #{database} > #{dump_file.path}"
     System.run(cmd)
     dump_file
   end
