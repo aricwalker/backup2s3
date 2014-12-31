@@ -22,10 +22,9 @@ class PostgresqlAdapter
     host = @db_credentials['host'] || 'localhost'
     superuser = System.prompt "Postgres superuser: "
     su_password = System.prompt "#{superuser} password: "
-    cmd = "PGPASSWORD=\"#{su_password}\" && PGUSER=\"#{superuser}\"; " +
-      "dropdb --host #{host} #{database}; " +
-      "createdb --host #{host} -T template0 #{database}; " +
-      "pg_restore --host #{host} -Ft --dbname=#{database} #{dump_file.path}"
+    cmd = "PGPASSWORD=\"#{su_password}\" PGUSER=\"#{superuser}\" dropdb --host #{host} #{database} && " +
+      "PGPASSWORD=\"#{su_password}\" PGUSER=\"#{superuser}\" createdb --host #{host} -T template0 #{database} && " +
+      "PGPASSWORD=\"#{su_password}\" PGUSER=\"#{superuser}\" pg_restore --host #{host} -Ft --dbname=#{database} #{dump_file.path}"
     System.run(cmd)
   end
 
