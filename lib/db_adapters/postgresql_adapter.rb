@@ -28,5 +28,9 @@ class PostgresqlAdapter
     System.run(cmd)
   end
 
+  def backup_extension
+    return ".tar"
+  end
+
 end
 

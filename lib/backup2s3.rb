@@ -63,7 +63,7 @@ class Backup2s3
   # information.
   def create_backup(comment)
     if @conf[:backups][:backup_database]
-      @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database") << ".sql"
+      @database_file = System.clean("#{@time}-#{System.db_credentials['database']}-database") << @db_adapter.backup_extension
       print "\nDumping database..."
       database_temp = @db_adapter.db_dump
       puts "\ndone\n- Database dump file size: " << database_temp.size.to_s << " B"; print "Backing up database dump file..."

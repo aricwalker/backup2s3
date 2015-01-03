@@ -23,6 +23,10 @@ class MysqlAdapter
     true
   end
 
+  def backup_extension
+    return ".sql"
+  end
+
   private
 
   def db_options
