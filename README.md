@@ -1,5 +1,5 @@
 
-***NOTE: This gem is no longer maintained, contact me if you are interested working on it.***
+***NOTE: This gem is no longer maintained. Please contact me if you are interested in helping maintain it.***
 
 SETUP
 
